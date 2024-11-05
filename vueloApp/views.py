@@ -180,3 +180,27 @@ def contacto(request):
     timestamp = timezone.now().timestamp()
 
     return render(request, 'contacto.html', {'form': form, 'timestamp': timestamp})
+
+# views.py
+
+import requests
+from django.shortcuts import render
+from django.http import JsonResponse
+
+def destinos(request):
+    api_key = '0268e0ced0b01895601ac7895cb4bbe7'  
+    endpoint = 'http://api.aviationstack.com/v1/flights'
+    params = {
+        'access_key': api_key,
+        'arr_icao': 'SCEL',  # Código ICAO de Santiago de Chile (SCEL)
+        'flight_status': 'active',  # o 'scheduled', 'active' según necesites
+    }
+
+    response = requests.get(endpoint, params=params)
+    if response.status_code == 200:
+        vuelos = response.json()['data']
+    else:
+        vuelos = []  # Si la API falla, regresamos una lista vacía
+
+    return render(request, 'destinos.html', {'vuelos': vuelos})
+

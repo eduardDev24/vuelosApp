@@ -34,5 +34,6 @@ urlpatterns = [
     path('vista_boletos', views.vista_boletos, name='vista_boletos'),
     path('editar_boleto/<int:boleto_id>', views.editar_boleto, name='editar_boleto'),
     path('eliminar_boleto/<int:boleto_id>', views.eliminar_boleto, name='eliminar_boleto'),
+    path('destinos/', views.destinos, name='destinos'),
     
 ]

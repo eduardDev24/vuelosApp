@@ -1,8 +1,34 @@
-{% extends "inicio.html" %}
+
+{% extends 'inicio.html' %}
 
 {% block content %}
-    <div class="container-destinos">
-        <h1>DESTINOS</h1>
-    </div>
-    
+<h2>Vuelos en Aeropuertos</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Número de Vuelo</th>
+      <th>Aerolínea</th>
+      <th>Estado</th>
+      <th>Origen</th>
+      <th>Destino</th>
+      <th>Hora Programada</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for vuelo in vuelos %}
+    <tr>
+      <td>{{ vuelo.flight.iata }}</td>
+      <td>{{ vuelo.airline.name }}</td>
+      <td>{{ vuelo.flight_status }}</td>
+      <td>{{ vuelo.departure.airport }}</td>
+      <td>{{ vuelo.arrival.airport }}</td>
+      <td>{{ vuelo.departure.estimated }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="6">No se encontraron vuelos con el estado solicitado.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
