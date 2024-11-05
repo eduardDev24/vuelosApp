@@ -1,0 +1,46 @@
+{% extends 'inicio.html' %} {% block content %}
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <h4>Lista de Boletos</h4>
+  </div>
+  <div class="card-body">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Destino Ida</th>
+          <th>Destino Vuelta</th>
+          <th>Asiento</th>
+          <th>Horario</th>
+          <th>Total del Viaje</th>          
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for boleto in boletos %}
+        <tr>
+          <td>{{ boleto.nombre }}</td>
+          <td>{{ boleto.destino_ida }}</td>
+          <td>{{ boleto.destino_vuelta }}</td>
+          <td>{{ boleto.asiento }}</td>
+          <td>{{ boleto.horario }}</td>
+          <td>${{ boleto.total_viaje }}</td>
+          <td>
+            <a
+              href="{% url 'editar_boleto' boleto.id %}"
+              class="btn btn-warning btn-sm"
+              >Editar</a
+            >
+            <a
+              href="{% url 'eliminar_boleto' boleto.id %}"
+              class="btn btn-danger btn-sm"
+              >Eliminar</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

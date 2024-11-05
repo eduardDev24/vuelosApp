@@ -1,0 +1,102 @@
+{% extends 'inicio.html' %} {% block content %}
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <h4>Editar Boleto</h4>
+  </div>
+  <div class="card-body">
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+        onclick="window.location.href=`{% url 'vista_boletos' %}`"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
+    <form id="editForm" method="post" onsubmit="return confirm('¿Estás seguro de que deseas guardar los cambios en el boleto?');">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="id_nombre" class="form-label">Nombre</label>
+        {{ form.nombre }} {% if form.nombre.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.nombre.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_rut" class="form-label">RUT</label>
+        {{ form.rut }} {% if form.rut.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.rut.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_aerolinea" class="form-label">Aerolínea</label>
+        {{ form.aerolinea }} {% if form.aerolinea.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.aerolinea.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_destino_ida" class="form-label">Destino de Ida</label>
+        {{ form.destino_ida }} {% if form.destino_ida.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.destino_ida.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_destino_vuelta" class="form-label"
+          >Destino de Vuelta</label
+        >
+        {{ form.destino_vuelta }} {% if form.destino_vuelta.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.destino_vuelta.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_asiento" class="form-label">Asiento</label>
+        {{ form.asiento }} {% if form.asiento.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.asiento.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_horario" class="form-label">Horario</label>
+        {{ form.horario }} {% if form.horario.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.horario.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_total_viaje" class="form-label">Total del Viaje</label>
+        {{ form.total_viaje }} {% if form.total_viaje.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.total_viaje.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-success">Guardar Cambios</button>
+      <a href="{% url 'vista_boletos' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

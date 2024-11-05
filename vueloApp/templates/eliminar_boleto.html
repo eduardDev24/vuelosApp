@@ -1,0 +1,30 @@
+{% extends 'inicio.html' %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-danger text-white">
+        <h4>Eliminar Boleto</h4>
+    </div>
+    <div class="card-body">
+        <h5>¿Estás seguro de que deseas eliminar el boleto?, para:</h5>
+        <ul class="list-group mb-3">
+            <li class="list-group-item"><strong>Destino de Ida:</strong> {{ boleto.destino_ida }}</li>
+            <li class="list-group-item"><strong>Destino de Vuelta:</strong> {{ boleto.destino_vuelta }}</li>
+            <li class="list-group-item"><strong>Asiento:</strong> {{ boleto.asiento }}</li>
+            <li class="list-group-item"><strong>Horario:</strong> {{ boleto.horario }}</li>
+            <li class="list-group-item"><strong>Total del Viaje:</strong> {{ boleto.total_viaje }}</li>
+        </ul>
+        <p>Esta acción no se puede deshacer.</p>
+        <div class="d-flex justify-content-between mt-3">
+            <form method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este boleto? Esta acción no se puede deshacer.');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+            <a href="{% url 'vista_boletos' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

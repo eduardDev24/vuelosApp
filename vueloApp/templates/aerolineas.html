@@ -1,0 +1,30 @@
+{% extends 'inicio.html' %} {% load static %} {% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Aerolíneas</h2>
+  <div class="row">
+    {% for aerolinea in aerolineas %}
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <img
+          src="{% static 'avion.jpg' %}"
+          class="card-img-top"
+          alt=" imagen "
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ aerolinea.nombre }}</h5>
+          <p class="card-text">Código: {{ aerolinea.codigo }}</p>
+          <p class="card-text">Descripción: {{ aerolinea.descripcion }}</p>
+        </div>
+        <div class="card-footer text-center">
+          <a href="" class="btn btn-primary">Ver Detalles</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <p class="text-center">No hay aerolíneas disponibles en este momento.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

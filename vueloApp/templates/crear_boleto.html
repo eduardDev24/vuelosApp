@@ -1,0 +1,105 @@
+{% extends 'inicio.html' %} 
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-sm" style="max-width: 600px; width: 100%;">
+        <div class="card-header bg-primary text-white">
+            <h4>Crear Boleto</h4>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+            <div class="alert alert-success" role="alert">
+                {% for message in messages %} 
+                    {{ message }}<br />
+                {% endfor %}
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                    onclick="window.location.href=`{% url 'vista_boletos' %}`"
+                ></button>
+            </div>
+            {% endif %}
+
+            <form method="post" class="p-4 border rounded shadow-sm bg-light">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label for="rut" class="form-label">RUT</label>
+                    <input type="text" name="rut" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label for="destino_ida" class="form-label">Destino Ida</label>
+                    <select name="destino_ida" class="form-control" required>
+                        {% for pais in paises %}
+                        <option value="{{ pais.id }}">{{ pais.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="destino_vuelta" class="form-label">Destino Vuelta</label>
+                    <select name="destino_vuelta" class="form-control" required>
+                        {% for pais in paises %}
+                        <option value="{{ pais.id }}">{{ pais.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="asiento" class="form-label">Asiento</label>
+                    <select name="asiento" class="form-control" required>
+                        {% for asiento in asientos %}
+                        <option value="{{ asiento.id }}">
+                            {{ asiento.numero }} - ${{ asiento.precio }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="horario" class="form-label">Horario</label>
+                    <select name="horario" class="form-control" required>
+                        {% for horario in horarios %}
+                        <option value="{{ horario.id }}">
+                            {{ horario.hora_salida }} - {{ horario.hora_llegada }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="aerolinea" class="form-label">Aerolínea</label>
+                    <select name="aerolinea" class="form-control" required>
+                        {% for aerolinea in aerolineas %}
+                        <option value="{{ aerolinea.id }}">{{ aerolinea.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="total_viaje" class="form-label">Total del Boleto</label>
+                    <input
+                        type="text"
+                        name="total_viaje"
+                        class="form-control"
+                        value="0.00"
+                        readonly
+                    />
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                    <a href="{% url 'inicio' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+NGltVq4p4HY+hZxPyyZ+BO4Z3Ze"
+    crossorigin="anonymous"
+></script>
+

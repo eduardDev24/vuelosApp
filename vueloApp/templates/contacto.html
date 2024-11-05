@@ -1,0 +1,58 @@
+{% extends 'inicio.html' %} {% load static %} {% block content %}
+<link
+  rel="stylesheet"
+  href="{% static 'styles/estilo.css' %}?v={{ timestamp }}"
+/>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <h4>Contacto</h4>
+  </div>
+  <div class="card-body">
+    <!-- Mensaje de éxito -->
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert {{ message.tags }} alert-dismissible fade show"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+        onclick="window.location.href=`{% url 'inicio' %}`"></button>
+    </div>
+    {% endfor %} {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="id_nombre" class="form-label">Nombre</label>
+        {{ form.nombre }} {% if form.nombre.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.nombre.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        <label for="id_email" class="form-label">Correo Electrónico</label>
+        {{ form.email }} {% if form.email.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.email.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        <label for="id_mensaje" class="form-label">Mensaje</label>
+        {{ form.mensaje }} {% if form.mensaje.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.mensaje.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn btn-success">Enviar</button>
+      <a href="{% url 'inicio' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
