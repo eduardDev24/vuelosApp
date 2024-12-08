@@ -1,0 +1,179 @@
+
+body {
+    background-color: rgb(255, 255, 255);
+    overflow-y: auto; /* permite el scroll vertical */
+    margin: 0; /* Elimina cualquier margen en el body */
+    padding: 0;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+    padding: 20px;
+    position: relative; 
+}
+
+.image-container {
+    background-image: url("../fondo.jpg"); /* Cambia la ruta según tu estructura de archivos */
+    background-size: cover;
+    background-position: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Asegura que la imagen esté detrás del formulario */
+}
+
+.form-container {
+    width: 100%; /* Ajusta el ancho para ser responsivo */
+    max-width: 400px; /* Ancho máximo del formulario */
+    padding: 2rem; /* Ajusta el padding según lo desees */
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente para el formulario */
+    border-radius: 8px; /* Bordes redondeados */
+    z-index: 2; /* Asegura que el formulario esté delante de la imagen */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    color: rgba(255, 255, 255, 0.8); /* Color del título con transparencia */
+    position: absolute; /* Para posicionar el título sobre la imagen */
+    top: 20px; /* Ajusta según tu diseño */
+    left: 50%; /* Centra horizontalmente */
+    transform: translateX(-50%); /* Ajusta el centrado */
+    font-size: 2.5rem; /* Tamaño del texto */
+    text-align: center; /* Centra el texto */
+    z-index: 3;
+}
+
+.login-form {
+    margin-top: 50px; /* Espacio entre el título y el formulario */
+}
+
+.form-label {
+    font-weight: bold; /* Resalta las etiquetas */
+}
+
+.btn {
+    margin-top: 1rem; /* Espacio encima del botón */
+}
+
+
+.navbar {
+    
+    background: rgb(6,132,246);
+    background: linear-gradient(90deg, rgba(6,132,246,1) 0%, rgba(17,32,106,1) 100%);
+    
+}
+
+
+
+/* Estilos para centrar PACK-PROMOCION*/
+.pack-promocion-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+
+  .pack-promocion-link {
+    font-size: 1.5rem; /* Hacer el texto más grande */
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    border-radius: 10px;
+    transition: transform 0.3s, color 0.3s;
+  }
+
+  /* Animación de resplandor y movimiento */
+  .pack-promocion-link:hover {
+    color: #fff;
+    transform: translateY(-5px); /* Mueve el enlace hacia arriba */
+    animation: glow 1.5s ease-in-out infinite, pulse 1s infinite alternate;
+  }
+
+  /* Animación de resplandor */
+  @keyframes glow {
+    0% {
+      text-shadow: 0 0 5px #ff4b2b, 0 0 10px #ff416c, 0 0 15px #ff416c;
+    }
+    50% {
+      text-shadow: 0 0 10px #ff4b2b, 0 0 20px #ff416c, 0 0 30px #ff416c;
+    }
+    100% {
+      text-shadow: 0 0 5px #ff4b2b, 0 0 10px #ff416c, 0 0 15px #ff416c;
+    }
+  }
+
+  /* Animación de pulso */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* Estilo de tarjetas y fondo de la página */
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #007BFF;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-body {
+    background-color: white;
+}
+
+.card-body h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.card-body p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+/* Botones */
+.btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+}
+
+.btn-primary {
+    background-color: #007BFF;
+    border: none;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+

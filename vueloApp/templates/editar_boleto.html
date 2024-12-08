@@ -16,7 +16,11 @@
       ></button>
     </div>
     {% endfor %} {% endif %}
-    <form id="editForm" method="post" onsubmit="return confirm('¿Estás seguro de que deseas guardar los cambios en el boleto?');">
+    <form
+      id="editForm"
+      method="post"
+      onsubmit="return confirm('¿Estás seguro de que deseas guardar los cambios en el boleto?');"
+    >
       {% csrf_token %}
 
       <div class="mb-3">
@@ -85,6 +89,15 @@
       </div>
 
       <div class="mb-3">
+        <label for="pack" class="form-label">Selecciona un pack:</label>
+        {{ form.pack }} {% if form.pack.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.pack.errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
         <label for="id_total_viaje" class="form-label">Total del Viaje</label>
         {{ form.total_viaje }} {% if form.total_viaje.errors %}
         <div class="invalid-feedback d-block">
@@ -93,8 +106,8 @@
         {% endif %}
       </div>
 
-      <button type="submit" class="btn btn-success">Guardar Cambios</button>
-      <a href="{% url 'vista_boletos' %}" class="btn btn-secondary">Cancelar</a>
+      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      <a href="{% url 'vista_boletos' %}" class="btn btn-success">Cancelar</a>
     </form>
   </div>
 </div>

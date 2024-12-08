@@ -16,12 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth.views import LogoutView
-from django.urls import path
-
+from django.urls import include, path
+from packApp2 import views as app2
 from vueloApp import views
+from rest_framework.routers import DefaultRouter
+router = DefaultRouter()
+router.register('pack', app2.PackPromocionViewSets)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),    
+    path('admin/', admin.site.urls),
+    # manejo de cierre de sesion por Django con LogoutView
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('', views.iniciar_sesion, name='login'),
     path('registrarse', views.registrarse, name='registrarse'),
@@ -32,8 +36,13 @@ urlpatterns = [
     path('contacto', views.contacto, name='contacto'),
     path('crear_boleto', views.crear_boleto, name='crear_boleto'),
     path('vista_boletos', views.vista_boletos, name='vista_boletos'),
-    path('editar_boleto/<int:boleto_id>', views.editar_boleto, name='editar_boleto'),
-    path('eliminar_boleto/<int:boleto_id>', views.eliminar_boleto, name='eliminar_boleto'),
-    path('destinos/', views.destinos, name='destinos'),
-    
+    path('editar_boleto/<int:boleto_id>',
+         views.editar_boleto, name='editar_boleto'),
+    path('eliminar_boleto/<int:boleto_id>',
+         views.eliminar_boleto, name='eliminar_boleto'),
+    path('pack_promocion/', app2.pack_promocion, name='pack_promocion'),
+    path('ver_seleccion/', app2.ver_seleccion, name='ver_seleccion'),
+    path('', include(router.urls)),
+
+
 ]

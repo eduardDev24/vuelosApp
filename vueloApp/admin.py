@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
-# admin.py
+
 from django.contrib import admin
 from .models import Pais, Aerolinea, Asiento, Horario, Boleto, Contacto
 
@@ -18,7 +17,7 @@ class AerolineaAdmin(admin.ModelAdmin):
 # Clase para administrar el modelo Asiento
 class AsientoAdmin(admin.ModelAdmin):
     list_display = ('numero', 'disponible', 'precio')
-    list_filter = ('disponible',)
+    list_filter = ('numero','disponible', 'precio')
 
 # Clase para administrar el modelo Horario
 class HorarioAdmin(admin.ModelAdmin):

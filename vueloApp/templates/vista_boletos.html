@@ -12,33 +12,49 @@
           <th>Destino Vuelta</th>
           <th>Asiento</th>
           <th>Horario</th>
-          <th>Total del Viaje</th>          
+          <th>Aerolínea</th>
+          <th>Total del Viaje</th>
+          <th>Pack</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {% for boleto in boletos %}
+        {% if boletos %} 
+          {% for boleto in boletos %}
         <tr>
           <td>{{ boleto.nombre }}</td>
           <td>{{ boleto.destino_ida }}</td>
           <td>{{ boleto.destino_vuelta }}</td>
           <td>{{ boleto.asiento }}</td>
           <td>{{ boleto.horario }}</td>
+          <td>{{ boleto.aerolinea }}</td>
           <td>${{ boleto.total_viaje }}</td>
           <td>
-            <a
-              href="{% url 'editar_boleto' boleto.id %}"
-              class="btn btn-warning btn-sm"
-              >Editar</a
-            >
-            <a
-              href="{% url 'eliminar_boleto' boleto.id %}"
-              class="btn btn-danger btn-sm"
-              >Eliminar</a
-            >
-          </td>
+            {% if boleto.pack %} {{ boleto.pack.nombre }} 
+            {% else %}
+             Ninguno 
+            {% endif %}
+              </td>
+              <td>
+                <a
+                  href="{% url 'editar_boleto' boleto.id %}"
+                  class="btn btn-warning btn-sm"
+                  >Editar</a
+                >
+                <a
+                  href="{% url 'eliminar_boleto' boleto.id %}"
+                  class="btn btn-danger btn-sm"
+                  >Eliminar</a
+                >
+              </td>
+            </tr>
+          {% endfor %} 
+        
+        {% else %}
+        <tr>
+          <td colspan="9" class="text-center">No tienes boletos creados.</td>
         </tr>
-        {% endfor %}
+        {% endif %}
       </tbody>
     </table>
   </div>

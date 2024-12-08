@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+
+from packApp2.models import Pack_promocion
 # Create your models here.
 
 
@@ -38,7 +40,8 @@ class Horario(models.Model):
 
 
 class Boleto(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='boletos_vuelo')
     nombre = models.CharField(max_length=100)
     rut = models.CharField(max_length=12)
     destino_ida = models.ForeignKey(
@@ -50,6 +53,8 @@ class Boleto(models.Model):
     aerolinea = models.ForeignKey(
         Aerolinea, on_delete=models.CASCADE, default=1)
     total_viaje = models.DecimalField(max_digits=10, decimal_places=2)
+    pack = models.ForeignKey(Pack_promocion, on_delete=models.SET_NULL,
+                             null=True, blank=True, related_name='boletos')
 
     def __str__(self):
         return f"Boleto de {self.nombre} - {self.destino_ida} a {self.destino_vuelta}"
@@ -63,5 +68,3 @@ class Contacto(models.Model):
 
     def __str__(self):
         return f'Mensaje de {self.nombre} ({self.email})'
-
-# -----------------------------------------------------------

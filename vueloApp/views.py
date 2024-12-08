@@ -1,67 +1,65 @@
 
+import requests
 from django.shortcuts import render, redirect, get_object_or_404
+
+from packApp2.models import Pack_promocion
 from .models import Boleto, Aerolinea, Pais, Asiento, Horario
 from .forms import BoletoForm, RegistroForm
-from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import ContactoForm
 from django.utils import timezone
 
+from django.shortcuts import render
 
-# Create your views here.
+
+@login_required(login_url='login')
 def inicio(request):
     return render(request, 'inicio.html')
 
 
+@login_required(login_url='login')
 def destinos(request):
     return render(request, 'destinos.html')
 
 
+@login_required(login_url='login')
 def aerolineas(request):
     # Recupera todas las aerolíneas de la base de datos
     aerolineas = Aerolinea.objects.all()
     return render(request, 'aerolineas.html', {'aerolineas': aerolineas})
 
-#  Esta funcion queda para actualizar para mas adelante
 
-
+@login_required(login_url='login')
 def detalle_aerolinea(request, id):
     aerolinea = get_object_or_404(Aerolinea, id=id)
     return render(request, 'detalle_aerolinea.html', {'aerolinea': aerolinea})
 
 
+@login_required(login_url='login')
 def contacto(request):
     return render(request, 'contacto.html')
 
 
-class CustomLoginView(LoginView):
-    template_name = 'login.html'
-    # Redirige a los usuarios autenticados automáticamente
-    redirect_authenticated_user = True
-
-
-def cerrar(request):
-    if request.method == 'POST' and request.user.is_authenticated:
-        messages.success(request, 'Has cerrado sesión exitosamente.')
-    return render(request, 'login.html')
-
-
-@login_required
+@login_required(login_url='login')
 def crear_boleto(request):
     if request.method == 'POST':
         form = BoletoForm(request.POST)
         if form.is_valid():
             boleto = form.save(commit=False)
-            boleto.usuario = request.user
+            boleto.usuario = request.user  # Asociamos el usuario actual
 
             # Obtenemos el asiento y calcular el total
             asiento = Asiento.objects.get(id=form.cleaned_data['asiento'].id)
             boleto.total_viaje = asiento.precio
+
+            # Obtenemos el pack seleccionado (si existe)
+            # Esto es el pack seleccionado
+            pack = form.cleaned_data.get('pack')
+            if pack:
+                boleto.pack = pack  # Asociamos el pack al boleto
 
             # Marcamos el asiento como no disponible
             if asiento.disponible:
@@ -70,6 +68,7 @@ def crear_boleto(request):
 
                 boleto.save()
                 messages.success(request, "Boleto creado exitosamente.")
+                # Redirigimos después de guardar
                 return redirect('crear_boleto')
             else:
                 messages.error(request, "El asiento no está disponible.")
@@ -80,6 +79,7 @@ def crear_boleto(request):
     aerolineas = Aerolinea.objects.all()
     asientos = Asiento.objects.filter(disponible=True)
     horarios = Horario.objects.all()
+    promociones = Pack_promocion.objects.all()
 
     return render(request, 'crear_boleto.html', {
         'form': form,
@@ -87,12 +87,14 @@ def crear_boleto(request):
         'aerolineas': aerolineas,
         'asientos': asientos,
         'horarios': horarios,
+        'promociones': promociones,
     })
 
 
-@login_required
+@login_required(login_url='login')
 def vista_boletos(request):
-    boletos = Boleto.objects.all()
+    # Obtenemos los boletos creados por el usuario que inició sesión.
+    boletos = Boleto.objects.filter(usuario=request.user)
     return render(request, 'vista_boletos.html', {'boletos': boletos})
 
 
@@ -102,16 +104,26 @@ def editar_boleto(request, boleto_id):
     if request.method == 'POST':
         form = BoletoForm(request.POST, instance=boleto)
         if form.is_valid():
-            form.save()
+            boleto = form.save(commit=False)
 
+            # Obtenemos el pack seleccionado (si existe)
+            pack = form.cleaned_data.get('pack')
+            print(f"Pack seleccionado: {pack}")
+            if pack:
+                boleto.pack = pack  # Asociamos el pack al boleto
+            else:
+                boleto.pack = None  # Desasociamos el pack si no se selecciona ninguno
+
+            boleto.save()
+            messages.success(request, 'Boleto editado exitosamente.')
             return redirect('vista_boletos')
         else:
-            # Mensaje de error
             messages.error(
                 request, 'Error al editar el boleto. Por favor verifica los datos.')
-            print(form.errors)  # Imprime los errores en la consola
+
     else:
         form = BoletoForm(instance=boleto)
+
     return render(request, 'editar_boleto.html', {'form': form, 'boleto': boleto})
 
 
@@ -130,39 +142,64 @@ def registrarse(request):
         form = RegistroForm(request.POST)
         if form.is_valid():
             user = form.save()
+
+            # Asignar privilegios a los usuarios con nombres especiales
+            if user.username.lower() in ['administrador']:
+                user.is_staff = True
+                user.is_superuser = True  # Opcional: también lo puedes hacer superusuario
+                user.save()
+
+                # Redirigir al panel de administración
+                return redirect('/admin/')
+
+            # Mensaje de éxito para usuarios regulares
             messages.success(
                 request, "Registro exitoso. Por favor, inicia sesión.")
-            # Redirige al login después del registro exitoso
             return redirect('login')
         else:
+            # Mensaje de error si el formulario no es válido
             messages.error(
                 request, "Error en el formulario. Revisa los datos ingresados.")
     else:
         form = RegistroForm()
+
+    # Renderiza el formulario de registro
     return render(request, 'registrarse.html', {'form': form})
 
 
 def iniciar_sesion(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        print(f"Intento de inicio de sesión: Username={
+              username}, Password={password}")  # Depuración por consola
 
         # Autenticación del usuario
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
+            print(f"autenticación para el usuario: {username}")
             # Si el usuario es autenticado, iniciar sesión
             login(request, user)
-            # Redirige a la página de inicio si la autenticación es exitosa
-            return redirect('inicio')
-        else:
-            # Si las credenciales son incorrectas, se muestra un mensaje de error
-            messages.error(request, "Usuario o contraseña no válidos.")
 
-    # Renderiza el formulario de inicio de sesión, incluso si el método es 'GET' o hay un error
+            # Redirigir según los privilegios del usuario
+            if user.is_staff or user.username.lower() in ['administrador']:
+                return redirect('/admin/login/')
+            else:
+                # Redirige a la página principal para usuarios regulares
+                return redirect('inicio')
+        else:
+            # Si las credenciales son incorrectas
+            messages.error(request, "Usuario o contraseña no válidos.")
+            # regresa al formulario de login
+            return redirect('login')
+
+    # Renderiza el formulario de inicio de sesión si el método es GET o si hay errores
     return render(request, 'login.html')
 
 
+@login_required(login_url='login')
 def contacto(request):
     if request.method == 'POST':
         form = ContactoForm(request.POST)
@@ -181,26 +218,25 @@ def contacto(request):
 
     return render(request, 'contacto.html', {'form': form, 'timestamp': timestamp})
 
-# views.py
 
-import requests
-from django.shortcuts import render
-from django.http import JsonResponse
-
+@login_required(login_url='login')
 def destinos(request):
-    api_key = '0268e0ced0b01895601ac7895cb4bbe7'  
+    api_key = '0268e0ced0b01895601ac7895cb4bbe7'
     endpoint = 'http://api.aviationstack.com/v1/flights'
     params = {
         'access_key': api_key,
         'arr_icao': 'SCEL',  # Código ICAO de Santiago de Chile (SCEL)
-        'flight_status': 'active',  # o 'scheduled', 'active' según necesites
+        'flight_status': 'active',  # Puede ser 'scheduled', 'active', etc.
     }
 
-    response = requests.get(endpoint, params=params)
-    if response.status_code == 200:
-        vuelos = response.json()['data']
-    else:
-        vuelos = []  # Si la API falla, regresamos una lista vacía
+    try:
+        # Usamos la biblioteca requests para realizar la solicitud al API
+        response = requests.get(endpoint, params=params)
+        response.raise_for_status()  # Lanza una excepción si la respuesta no es exitosa
+        # Asegura que se obtenga 'data' o una lista vacía
+        vuelos = response.json().get('data', [])
+    except requests.RequestException as e:
+        print(f"Error al solicitar los datos: {e}")
+        vuelos = []  # En caso de error, asigna una lista vacía
 
     return render(request, 'destinos.html', {'vuelos': vuelos})
-

@@ -1,0 +1,23 @@
+{% extends 'inicio.html' %} {% load static %} {% block content %}
+
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 bg-white">
+    <div class="card-header text-white bg-primary">
+      <h2 class="text-center">Detalles de la Promoción</h2>
+    </div>
+    <div class="card-body">
+      <h3>{{ promocion.destino }}</h3>
+      <p><strong>Estadía:</strong> {{ promocion.estadias }}</p>
+      <p><strong>Transporte:</strong> {{ promocion.transporte }}</p>
+      <p><strong>Comidas:</strong> {{ promocion.comidas }}</p>
+      <p><strong>Hoteles:</strong> {{ promocion.hoteles }}</p>
+      <p><strong>Precio:</strong> ${{ promocion.precio }}</p>
+    </div>
+    <div class="card-footer text-center">
+      <a href="{% url 'pack_promocion' %}" class="btn btn-success mt-3"
+        >Volver</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

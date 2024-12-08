@@ -1,4 +1,6 @@
 from django import forms
+
+from packApp2.models import Pack_promocion
 from .models import Boleto, Contacto, Aerolinea
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -37,9 +39,12 @@ class BoletoForm(forms.ModelForm):
     class Meta:
         model = Boleto
         fields = ['nombre', 'rut', 'destino_ida', 'destino_vuelta',
-                  'asiento', 'horario', 'aerolinea', 'total_viaje']
-        
-    aerolinea = forms.ModelChoiceField(queryset=Aerolinea.objects.all(), empty_label="Selecciona una aerolínea")    
+                  'asiento', 'horario', 'aerolinea', 'total_viaje', 'pack']
+
+    aerolinea = forms.ModelChoiceField(
+        queryset=Aerolinea.objects.all(), empty_label="Selecciona una aerolínea")
+    pack = forms.ModelChoiceField(queryset=Pack_promocion.objects.all(
+    ), required=False, empty_label="Selecciona un Pack")
 
     # Método para calcular el total según el número de boletos
     def clean_total_viaje(self):
@@ -56,7 +61,7 @@ class BoletoForm(forms.ModelForm):
                 "El destino de ida y de vuelta no pueden ser el mismo.")
 
         return cleaned_data
-    
+
 
 class ContactoForm(forms.ModelForm):
     class Meta:

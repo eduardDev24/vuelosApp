@@ -1,0 +1,38 @@
+{% extends 'inicio.html' %} {% load static %} {% block content %}
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4 text-white border rounded bg-primary">Promociones Disponibles</h1>
+  <div class="row">
+    {% for promocion in promociones %}
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        
+        <div class="card-body">
+          <h5 class="card-title">{{ promocion.destino }}</h5>
+          <p><strong>Estadía:</strong> {{ promocion.estadias }}</p>
+          <p><strong>Transporte:</strong> {{ promocion.transporte }}</p>
+          <p><strong>Comidas:</strong> {{ promocion.comidas }}</p>
+          <p><strong>Hoteles:</strong> {{ promocion.hoteles }}</p>
+          <p><strong>Precio:</strong> ${{ promocion.precio }}</p>
+        </div>
+        <div class="card-footer text-center">
+          <a href="?id={{ promocion.id }}" class="btn btn-primary">Ver Detalles</a>
+          
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <p class="text-center">No hay promociones disponibles en este momento.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+      <div class="text-center mt-4">
+        <a href="{% url 'inicio' %}" class="btn btn-success">Volver</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
